@@ -1,9 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { MovieSearch } from './features/movies/movie-search/movie-search';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [MovieSearch],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
