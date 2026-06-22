@@ -1,0 +1,34 @@
+<article
+  class="group flex flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200/60 transition duration-200 hover:-translate-y-1 hover:shadow-xl"
+>
+  <div class="poster-container relative aspect-2/3 overflow-hidden bg-gray-100">
+    @if (movie.posterUrl) {
+      <img
+        [ngSrc]="movie.posterUrl"
+        [alt]="`${movie.title} - poster`"
+        fill
+        class="object-cover transition duration-300 group-hover:scale-105"
+      />
+    } @else {
+      <div class="flex h-full items-center justify-center px-2 text-center text-sm text-gray-400">
+        Brak plakatu
+      </div>
+    }
+
+    <span
+      class="absolute right-2 top-2 px-2 py-0.5 inline-flex items-center gap-1 rounded-full bg-black/56 text-xs font-semibold text-amber-300 backdrop-blur-sm"
+    >
+      ★ {{ movie.rating }}
+    </span>
+  </div>
+
+  <div class="flex flex-col gap-1 p-3">
+    <h3 class="line-clamp-1 font-semibold text-gray-900" [title]="movie.title">
+      {{ movie.title }}
+    </h3>
+    <span class="text-sm text-gray-500">{{ movie.releaseYear }}</span>
+    <p class="mt-1 line-clamp-2 text-sm text-gray-500">
+      {{ movie.overview }}
+    </p>
+  </div>
+</article>
