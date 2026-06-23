@@ -7,7 +7,14 @@
   />
 
   <div class="w-full">
-    @let movies = (movies$ | async) ?? [];
-    <app-movie-list [movies]="movies" />
+    <!-- @let movies = (movies$ | async) ?? []; -->
+
+    @if (store.loading$ | async) {
+      <p>Ładowanie...</p>
+    } @else if (store.error$ | async; as err) {
+      <p>{{ err }}</p>
+    } @else {
+      <app-movie-list [movies]="(store.movies$ | async) ?? []" />
+    }
   </div>
 </div>
