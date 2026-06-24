@@ -5,7 +5,9 @@ import {
   catchError,
   distinctUntilChanged,
   map,
+  Observable,
   of,
+  shareReplay,
   Subject,
   switchMap,
 } from 'rxjs';
@@ -24,7 +26,7 @@ const INITIAL_STATE: MovieState = { movies: [], loading: false, error: null };
 })
 export class MovieStore {
   private readonly state$ = new BehaviorSubject<MovieState>(INITIAL_STATE);
-  private readonly searchTrigger$ = new Subject<string>();
+  private readonly searchTrigger$ = new Subject<{ query: string; genreId: number | null }>();
   private readonly movieApi = inject(MovieApi);
 
   readonly movies$ = this.state$.pipe(
@@ -42,15 +44,23 @@ export class MovieStore {
     distinctUntilChanged(),
   );
 
+  readonly genres$ = this.movieApi
+    .getGenres()
+    .pipe(shareReplay({ refCount: false, bufferSize: 1 }));
+
   constructor() {
     this.searchTrigger$
       .pipe(
-        switchMap((query) => {
+        switchMap(({ query, genreId }) => {
           this.patch({ loading: true, error: null });
-          const source$ =
-            query.trim().length < 2
-              ? this.movieApi.getPopular()
-              : this.movieApi.searchMovies(query.trim());
+          let source$: Observable<Movie[]>;
+          if (query.trim().length >= 2) {
+            source$ = this.movieApi.searchMovies(query.trim());
+          } else if (genreId !== null) {
+            source$ = this.movieApi.discoverMovies(genreId);
+          } else {
+            source$ = this.movieApi.getPopular();
+          }
 
           return source$.pipe(
             catchError(() => {
@@ -75,11 +85,11 @@ export class MovieStore {
     });
   }
 
-  search(query: string): void {
-    this.searchTrigger$.next(query);
+  search(query: string, genreId: number | null): void {
+    this.searchTrigger$.next({ query, genreId });
   }
 
   loadPopular(): void {
-    this.searchTrigger$.next('');
+    this.searchTrigger$.next({ query: '', genreId: null });
   }
 }
