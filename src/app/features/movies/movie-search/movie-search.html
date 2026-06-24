@@ -6,6 +6,13 @@
     class="border rounded px-3 py-2 w-xl"
   />
 
+  <select [formControl]="genreControl">
+    <option [ngValue]="null">Wszystkie gatunki</option>
+    @for (genre of (store.genres$ | async) ?? []; track genre.id) {
+      <option [ngValue]="genre.id">{{ genre.name }}</option>
+    }
+  </select>
+
   <div class="w-full">
     <!-- @let movies = (movies$ | async) ?? []; -->
 

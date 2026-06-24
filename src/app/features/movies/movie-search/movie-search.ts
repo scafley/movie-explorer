@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { MovieList } from '../movie-list/movie-list';
 import { MovieStore } from '../movie-store';
-import { debounceTime, distinctUntilChanged, startWith } from 'rxjs';
+import { combineLatest, debounceTime, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -14,20 +14,30 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class MovieSearch implements OnInit {
   readonly searchControl = new FormControl('', { nonNullable: true });
+  readonly genreControl = new FormControl<number | null>(null);
 
   protected readonly store = inject(MovieStore);
   private readonly destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.searchControl.valueChanges
-      .pipe(
-        startWith(''),
-        debounceTime(300),
-        distinctUntilChanged(),
+  // readonly genres$ = this.store.
 
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((q) => this.store.search(q));
+  ngOnInit(): void {
+    combineLatest([
+      this.searchControl.valueChanges.pipe(startWith('')),
+      this.genreControl.valueChanges.pipe(startWith(null)),
+    ])
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+      .subscribe(([query, genreId]) => this.store.search(query, genreId));
+
+    //   this.searchControl.valueChanges
+    //     .pipe(
+    //       startWith(''),
+    //       debounceTime(300),
+    //       distinctUntilChanged(),
+
+    //       takeUntilDestroyed(this.destroyRef),
+    //     )
+    //     .subscribe((q) => this.store.search(q));
   }
 }
 
