@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { map, Observable } from 'rxjs';
-import { Movie, TmdbPagedResponse, TmdbMovieDto } from './movie.models';
+import { Movie, TmdbPagedResponse, TmdbMovieDto, Genre } from './movie.models';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +23,20 @@ export class MovieApi {
   getPopular(page = 1): Observable<Movie[]> {
     return this.http
       .get<TmdbPagedResponse<TmdbMovieDto>>(`${this.baseUrl}/movie/popular`, { params: { page } })
+      .pipe(map((res) => res.results.map((dto) => this.toMovie(dto))));
+  }
+
+  getGenres(): Observable<Genre[]> {
+    return this.http
+      .get<{ genres: Genre[] }>(`${this.baseUrl}/genre/movie/list`)
+      .pipe(map((res) => res.genres));
+  }
+
+  discoverMovies(genreId: number, sortBy = 'popularity.desc'): Observable<Movie[]> {
+    return this.http
+      .get<
+        TmdbPagedResponse<TmdbMovieDto>
+      >(`${this.baseUrl}/discover/movie`, { params: { with_genres: genreId, sort_by: sortBy } })
       .pipe(map((res) => res.results.map((dto) => this.toMovie(dto))));
   }
 

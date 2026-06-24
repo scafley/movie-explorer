@@ -22,3 +22,8 @@ export interface Movie {
   releaseYear: string;
   rating: number;
 }
+
+export interface Genre {
+  id: number;
+  name: string;
+}
