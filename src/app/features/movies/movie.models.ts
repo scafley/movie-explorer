@@ -33,3 +33,33 @@ export interface MoviePage {
   page: number;
   totalPages: number;
 }
+
+export interface MovieDetailsData extends Movie {
+  genres: Genre[];
+  runtime: number;
+  tagline: string;
+  budget: number;
+  voteCount: number;
+}
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profileUrl: string | null;
+}
+
+export interface TmdbCastDto {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+}
+
+export interface TmdbMovieDetailsDto extends TmdbMovieDto {
+  runtime: number;
+  tagline: string;
+  budget: number;
+  vote_count: number;
+  genres: Genre[];
+}
