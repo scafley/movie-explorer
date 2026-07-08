@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Movie } from '../movie.models';
 import { NgOptimizedImage } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-movie-card',
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, RouterLink],
   templateUrl: './movie-card.html',
   styleUrl: './movie-card.scss',
 })
