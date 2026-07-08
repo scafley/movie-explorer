@@ -1,0 +1,35 @@
+<a routerLink="/">← Powrót</a><br />
+@if (store.loading$ | async) {
+  Ładowanie...
+} @else if (store.error$ | async; as err) {
+  {{ err }}
+} @else if (store.details$ | async; as details) {
+  @if (details.posterUrl !== null) {
+    <img [ngSrc]="details.posterUrl" [alt]="`${details.title} - poster`" width="342" height="513" />
+  }
+  <h2>{{ details.title }}</h2>
+  <p>{{ details.releaseYear }} · {{ details.runtime }} min · ★ {{ details.rating }}</p>
+  @if (details.tagline) {
+    <p>
+      <em>{{ details.tagline }}</em>
+    </p>
+  }
+  <p>{{ details.overview }}</p>
+  <div>
+    @for (g of details.genres; track g.id) {
+      <span>{{ g.name }} </span>
+    }
+  </div>
+  @if (store.cast$ | async; as cast) {
+    <div class="flex flex-wrap">
+      @for (member of cast; track member.id) {
+        <div class="mx-2">
+          <p>{{ member.name }}</p>
+          <p>{{ member.character }}</p>
+        </div>
+      }
+    </div>
+  }
+
+  <app-movie-list [movies]="(store.similar$ | async) ?? []"></app-movie-list>
+}
