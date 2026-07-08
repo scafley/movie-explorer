@@ -27,3 +27,9 @@ export interface Genre {
   id: number;
   name: string;
 }
+
+export interface MoviePage {
+  movies: Movie[];
+  page: number;
+  totalPages: number;
+}
