@@ -9,6 +9,7 @@ import {
   map,
   Observable,
   of,
+  retry,
   shareReplay,
   Subject,
   switchMap,
@@ -83,7 +84,9 @@ export class MovieStore {
           }
 
           return source$.pipe(
-            catchError(() => {
+            retry({ count: 2, delay: 1000 }),
+            catchError((err) => {
+              console.error('Nie udało się załadować filmów', err);
               this.patch({ error: 'Nie udało się załadować filmów', loading: false });
               return of({ movies: [], page: 1, totalPages: 1 } as MoviePage);
             }),
@@ -123,7 +126,9 @@ export class MovieStore {
           }
 
           return source$.pipe(
-            catchError(() => {
+            retry({ count: 2, delay: 1000 }),
+            catchError((err) => {
+              console.error('Nie udało się doładować filmów', err);
               this.patch({ error: 'Nie udało się doładować filmów', loading: false });
               return EMPTY;
             }),

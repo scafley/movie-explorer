@@ -1,6 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { CastMember, Movie, MovieDetailsData } from './movie.models';
-import { BehaviorSubject, catchError, distinctUntilChanged, EMPTY, forkJoin, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  distinctUntilChanged,
+  EMPTY,
+  forkJoin,
+  map,
+  retry,
+} from 'rxjs';
 import { MovieApi } from './movie-api';
 
 export interface MovieDetailsState {
@@ -61,7 +69,9 @@ export class MovieDetailsStore {
       similar: this.movieApi.getSimilarMovies(id),
     })
       .pipe(
-        catchError(() => {
+        retry({ count: 2, delay: 1000 }),
+        catchError((err) => {
+          console.error('Nie udało się załadować szczegółów.', err);
           this.patch({ error: 'Nie udało się załadować szczegółów.', loading: false });
           return EMPTY;
         }),
