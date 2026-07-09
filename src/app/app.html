@@ -1,1 +1,10 @@
+<div class="flex">
+  <a
+    [routerLink]="['/']"
+    routerLinkActive="font-bold text-blue-600"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Home</a
+  >
+  <a [routerLink]="['/favorites']" routerLinkActive="font-bold text-blue-600">Ulubione</a>
+</div>
 <router-outlet />
