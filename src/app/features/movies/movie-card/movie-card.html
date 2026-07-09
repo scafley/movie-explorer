@@ -21,6 +21,18 @@
       >
         ★ {{ movie.rating }}
       </span>
+      @let isFav = favorites.isFavorite(movie.id) | async;
+      <button
+        (click)="onToggleFavorite($event)"
+        class="absolute left-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/56 text-lg text-white backdrop-blur-sm transition hover:bg-black/70"
+        [attr.aria-label]="isFav ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'"
+      >
+        @if (isFav) {
+          ♥
+        } @else {
+          ♡
+        }
+      </button>
     </div>
 
     <div class="flex flex-col gap-1 p-3">
