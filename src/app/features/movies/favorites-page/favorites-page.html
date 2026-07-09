@@ -1,0 +1,3 @@
+<a routerLink="/">Powrót</a>
+<h1>Ulubione</h1>
+<app-movie-list [movies]="(favorites.favoritesList$ | async) ?? []" />
