@@ -19,8 +19,6 @@ export class MovieSearch implements OnInit {
   protected readonly store = inject(MovieStore);
   private readonly destroyRef = inject(DestroyRef);
 
-  // readonly genres$ = this.store.
-
   ngOnInit(): void {
     combineLatest([
       this.searchControl.valueChanges.pipe(startWith('')),
@@ -29,27 +27,12 @@ export class MovieSearch implements OnInit {
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe(([query, genreId]) => this.store.search(query, genreId));
 
-    //   this.searchControl.valueChanges
-    //     .pipe(
-    //       startWith(''),
-    //       debounceTime(300),
-    //       distinctUntilChanged(),
-
-    //       takeUntilDestroyed(this.destroyRef),
-    //     )
-    //     .subscribe((q) => this.store.search(q));
+    this.searchControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
+      if (value.trim().length >= 2) {
+        this.genreControl.disable({ emitEvent: false });
+      } else {
+        this.genreControl.enable({ emitEvent: false });
+      }
+    });
   }
 }
-
-// readonly movies$ = this.searchControl.valueChanges.pipe(
-//   startWith(''),
-//   debounceTime(300),
-//   distinctUntilChanged(),
-
-//   switchMap((query) => {
-//     const q = query.trim();
-
-//     if (q.length < 2) return this.movieApi.getPopular();
-//     return this.movieApi.searchMovies(q).pipe(catchError(() => of([] as Movie[])));
-//   }),
-// );
