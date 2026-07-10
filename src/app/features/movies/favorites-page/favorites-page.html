@@ -1,3 +1,10 @@
-<a routerLink="/">Powrót</a>
-<h1>Ulubione</h1>
+<h1 class="my-6 font-bold tracking-tight md:text-5xl lg:text-6xl text-blue-600">Ulubione</h1>
+
 <app-movie-list [movies]="(favorites.favoritesList$ | async) ?? []" />
+<button
+  class="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+  aria-label="Powrót"
+  (click)="goBack()"
+>
+  ←
+</button>

@@ -1,35 +1,73 @@
-<a routerLink="/">← Powrót</a><br />
 @if (store.loading$ | async) {
   Ładowanie...
 } @else if (store.error$ | async; as err) {
   {{ err }}
 } @else if (store.details$ | async; as details) {
-  @if (details.posterUrl !== null) {
-    <img [ngSrc]="details.posterUrl" [alt]="`${details.title} - poster`" width="342" height="513" />
-  }
-  <h2>{{ details.title }}</h2>
-  <p>{{ details.releaseYear }} · {{ details.runtime }} min · ★ {{ details.rating }}</p>
-  @if (details.tagline) {
-    <p>
-      <em>{{ details.tagline }}</em>
-    </p>
-  }
-  <p>{{ details.overview }}</p>
-  <div>
-    @for (g of details.genres; track g.id) {
-      <span>{{ g.name }} </span>
+  <div class="flex flex-col gap-6 md:flex-row mt-6">
+    @if (details.posterUrl !== null) {
+      <img
+        [ngSrc]="details.posterUrl"
+        [alt]="`${details.title} - poster`"
+        width="342"
+        height="513"
+        class="w-64 shrink-0 rounded-lg"
+      />
     }
+    <div class="flex-1">
+      <h2 class="pt-3 font-bold text-3xl md:text-5xl lg:text-7xl">{{ details.title }}</h2>
+
+      <p class="pt-3">
+        {{ details.releaseYear }} · {{ details.runtime }} min · ★ {{ details.rating }}
+      </p>
+      @if (details.tagline) {
+        <p class="pt-3">
+          <em>{{ details.tagline }}</em>
+        </p>
+      }
+      <div class="flex flex-wrap gap-2 pt-3">
+        @for (g of details.genres; track g.id) {
+          <span class="rounded-full bg-gray-100 px-3 py-1 text-sm">{{ g.name }} </span>
+        }
+      </div>
+      <p class="my-3">{{ details.overview }}</p>
+    </div>
   </div>
+
+  <h2 class="my-3 text-xl font-semibold">Obsada:</h2>
   @if (store.cast$ | async; as cast) {
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap gap-4">
       @for (member of cast; track member.id) {
-        <div class="mx-2">
-          <p>{{ member.name }}</p>
-          <p>{{ member.character }}</p>
+        <div class="w-32">
+          @if (member.profileUrl) {
+            <img
+              [ngSrc]="member.profileUrl"
+              [alt]="member.name"
+              width="128"
+              height="192"
+              class="rounded-lg object-cover"
+            />
+          } @else {
+            <div
+              class="flex h-48 w-32 items-center justify-center rounded-lg bg-gray-100 text-xs text-gray-400"
+            >
+              Brak zdjęcia
+            </div>
+          }
+          <p class="font-semibold">{{ member.name }}</p>
+          <p class="text-sm text-gray-500">{{ member.character }}</p>
         </div>
       }
     </div>
   }
 
+  <h2 class="my-3 text-xl font-semibold">Podobne filmy:</h2>
   <app-movie-list [movies]="(store.similar$ | async) ?? []"></app-movie-list>
 }
+
+<button
+  class="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+  aria-label="Powrót"
+  (click)="goBack()"
+>
+  ←
+</button>

@@ -1,18 +1,22 @@
-<div class="w-full flex mt-3 flex-col">
-  <input
-    type="search"
-    [formControl]="searchControl"
-    placeholder="Wpisz tytuł"
-    class="border rounded px-3 py-2 max-w-xl"
-  />
+<div class="w-full flex mt-6 flex-col">
+  <div class="flex flex-col gap-3 mb-6 sm:flex-row">
+    <input
+      type="search"
+      [formControl]="searchControl"
+      placeholder="Wpisz tytuł"
+      class="border rounded px-3 py-2 max-w-xl flex-1"
+    />
 
-  <select [formControl]="genreControl">
-    <option [ngValue]="null">Wszystkie gatunki</option>
-    @for (genre of (store.genres$ | async) ?? []; track genre.id) {
-      <option [ngValue]="genre.id">{{ genre.name }}</option>
-    }
-  </select>
-
+    <select
+      [formControl]="genreControl"
+      class="border rounded px-3 py-2 sm:w-56 disabled:opacity-20 disabled:cursor-not-allowed"
+    >
+      <option [ngValue]="null">Wszystkie gatunki</option>
+      @for (genre of (store.genres$ | async) ?? []; track genre.id) {
+        <option [ngValue]="genre.id">{{ genre.name }}</option>
+      }
+    </select>
+  </div>
   <div class="w-full">
     @if (store.loading$ | async) {
       <p>Ładowanie...</p>
@@ -20,8 +24,21 @@
       <p>{{ err }}</p>
     } @else {
       <app-movie-list [movies]="(store.movies$ | async) ?? []" />
-      @if (store.hasMore$ | async) {
-        <button (click)="store.loadMore()">Załaduj więcej</button>
+      @if (store.loadingMore$ | async) {
+        <div class="flex justify-center py-4">
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"
+          ></div>
+        </div>
+      } @else if (store.hasMore$ | async) {
+        <div class="flex justify-center py-4">
+          <button
+            class="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700 transition"
+            (click)="store.loadMore()"
+          >
+            Załaduj więcej
+          </button>
+        </div>
       }
     }
   </div>
