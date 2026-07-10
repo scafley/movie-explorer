@@ -20,6 +20,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export interface MovieState {
   movies: Movie[];
   loading: boolean;
+  loadingMore: boolean;
   error: string | null;
   page: number;
   totalPages: number;
@@ -29,6 +30,7 @@ export interface MovieState {
 const INITIAL_STATE: MovieState = {
   movies: [],
   loading: false,
+  loadingMore: false,
   error: null,
   page: 1,
   totalPages: 1,
@@ -52,6 +54,11 @@ export class MovieStore {
 
   readonly loading$ = this.state$.pipe(
     map((state) => state.loading),
+    distinctUntilChanged(),
+  );
+
+  readonly loadingMore$ = this.state$.pipe(
+    map((state) => state.loadingMore),
     distinctUntilChanged(),
   );
 
@@ -114,7 +121,7 @@ export class MovieStore {
           }
           const nextPage = page + 1;
 
-          this.patch({ loading: true });
+          this.patch({ loadingMore: true });
 
           let source$: Observable<MoviePage>;
           if (query.trim().length >= 2) {
@@ -129,7 +136,7 @@ export class MovieStore {
             retry({ count: 2, delay: 1000 }),
             catchError((err) => {
               console.error('Nie udało się doładować filmów', err);
-              this.patch({ error: 'Nie udało się doładować filmów', loading: false });
+              this.patch({ error: 'Nie udało się doładować filmów', loadingMore: false });
               return EMPTY;
             }),
           );
@@ -141,7 +148,7 @@ export class MovieStore {
           movies: [...this.state$.value.movies, ...result.movies],
           page: result.page,
           totalPages: result.totalPages,
-          loading: false,
+          loadingMore: false,
         });
       });
   }
