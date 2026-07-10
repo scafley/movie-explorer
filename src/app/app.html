@@ -1,10 +1,14 @@
-<div class="flex">
-  <a
-    [routerLink]="['/']"
-    routerLinkActive="font-bold text-blue-600"
-    [routerLinkActiveOptions]="{ exact: true }"
-    >Home</a
-  >
-  <a [routerLink]="['/favorites']" routerLinkActive="font-bold text-blue-600">Ulubione</a>
+<header class="border-b">
+  <nav class="mx-auto flex max-w-7xl gap-4 px-4 py-3">
+    <a
+      [routerLink]="['/']"
+      routerLinkActive="font-bold text-blue-600"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Home</a
+    >
+    <a [routerLink]="['/favorites']" routerLinkActive="font-bold text-blue-600">Ulubione</a>
+  </nav>
+</header>
+<div class="max-w-7xl mx-auto px-4">
+  <router-outlet />
 </div>
-<router-outlet />
