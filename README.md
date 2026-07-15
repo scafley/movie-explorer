@@ -1,12 +1,10 @@
 # 🎬 Movie Explorer
 
-A single-page application for browsing, searching and saving movies, built with **Angular 21** and the **TMDB API**. Written to explore modern Angular (zoneless, standalone, signal-ready) with a **pure RxJS** state-management approach — no NgRx, just services with `BehaviorSubject`.
+A single-page application for browsing, searching and saving movies, built with **Angular 21** and the **TMDB API**. 
+Written to explore modern Angular  with a **pure RxJS** state-management approach — no NgRx, just services with `BehaviorSubject`.
 
-**🔗 Live demo:** _<!-- wklej tutaj adres Netlify, np. https://movie-explorer-scafley.netlify.app -->_
+**🔗 Live demo:** https://movie-explorer-scafley.netlify.app
 
-<!-- Opcjonalnie dodaj zrzut ekranu:
-![Movie Explorer screenshot](docs/screenshot.png)
--->
 
 ---
 
@@ -18,7 +16,6 @@ A single-page application for browsing, searching and saving movies, built with 
 - **Movie details** — synopsis, runtime, genres, cast and similar titles, loaded in parallel.
 - **Favourites** — add/remove with a heart button, persisted to `localStorage`, on a dedicated page.
 - **Resilient networking** — automatic retries with back-off and graceful error handling.
-- **Polished UX** — responsive layout, distinct loading states, disabled controls where filters don't apply, and a floating back button.
 
 ---
 
@@ -26,7 +23,7 @@ A single-page application for browsing, searching and saving movies, built with 
 
 | Area | Choice |
 |------|--------|
-| Framework | Angular 21 (standalone components, zoneless) |
+| Framework | Angular 21 |
 | State | Pure RxJS — service-based stores with `BehaviorSubject` |
 | Styling | Tailwind CSS v4 |
 | HTTP | `HttpClient` + functional interceptor (auth header) |
@@ -104,14 +101,7 @@ Deployed on **Netlify**. The TMDB token is kept out of the repository: a build s
 
 > Note: as a client-only SPA, the API token is present in the shipped bundle — acceptable here since the TMDB read token is free and read-only. Hiding it fully would require a backend or serverless proxy (a planned next step).
 
----
 
-## 📌 Roadmap
-
-- [ ] Component & end-to-end tests (Playwright)
-- [ ] Serverless proxy to hide the API token
-- [ ] Dark mode
-- [ ] Reusable form input via `ControlValueAccessor`
 
 ---
 
